@@ -125,9 +125,9 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold mb-4">Contacto</h4>
               <ul className="space-y-2 text-muted-foreground">
-                <li>📧 info@orlasfest.com</li>
+                <li>📧 orlas@orlas.com</li>
                 <li>📱 +34 600 123 456</li>
-                <li>📍 Madrid, España</li>
+                <li>📍 Lanzarote</li>
               </ul>
             </div>
           </div>
