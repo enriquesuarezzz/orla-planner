@@ -116,7 +116,7 @@ export default function HomePage() {
               <h4 className="font-semibold mb-4">Servicios</h4>
               <ul className="space-y-2 text-muted-foreground">
                 <li>Organización de orlas</li>
-                <li>Alquiler de espacios</li>
+                <li>Selección de lugares</li>
                 <li>DJ y música</li>
                 <li>Cotillón y decoración</li>
               </ul>
@@ -133,7 +133,7 @@ export default function HomePage() {
           </div>
 
           <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 OrlasFest. Todos los derechos reservados.</p>
+            <p>&copy; 2025 Bermeja Producciones. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>
