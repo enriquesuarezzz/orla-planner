@@ -11,10 +11,10 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-24">
             <div className="flex items-center">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo.JPG-XEz8AUmiQA7QGhv1xMP1zVsO7JHj9a.jpeg"
+                src="/sombrero.png"
                 alt="Orlas Lanzarote Logo"
-                width={200}
-                height={70}
+                width={60}
+                height={60}
                 className="h-14 w-auto"
                 priority
               />
@@ -45,17 +45,19 @@ export default function HomePage() {
 
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-stone-900">
         <div className="absolute inset-0 z-0">
-          <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/home-xgeoHdnsfTmNyGHRturxGPkLCCpVm7.jpg"
-            alt="Orlas Lanzarote"
-            fill
-            className="object-cover opacity-50"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60"></div>
+          <Image src="/imagen-principal.png" alt="Orlas Lanzarote" fill className="object-cover opacity-60" priority />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
         </div>
 
-        <div className="relative z-10 text-center px-6 max-w-6xl mx-auto">
+        <div className="relative z-10 text-center px-6 max-w-6xl mx-auto flex flex-col items-center">
+          <Image
+            src="/logo-blanco-hero.png"
+            alt="Orlas Lanzarote"
+            width={600}
+            height={200}
+            className="mb-12 w-full max-w-2xl h-auto"
+            priority
+          />
           <Link href="/configurar">
             <Button
               size="lg"
@@ -120,11 +122,11 @@ export default function HomePage() {
             <div>
               <div className="mb-8">
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo.JPG-XEz8AUmiQA7QGhv1xMP1zVsO7JHj9a.jpeg"
+                  src="/logo-blanco.png"
                   alt="Orlas Lanzarote Logo"
                   width={180}
                   height={60}
-                  className="h-12 w-auto brightness-0 invert opacity-90"
+                  className="h-12 w-auto"
                 />
               </div>
               <p className="text-stone-400 leading-relaxed text-sm">

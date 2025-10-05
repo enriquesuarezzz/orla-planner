@@ -155,6 +155,17 @@ export default function ConfigurarPage() {
                     </div>
                   </Label>
                 </div>
+                <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
+                  <RadioGroupItem value="otros" id="otros" />
+                  <Label htmlFor="otros" className="flex-1 cursor-pointer">
+                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
+                      Otros
+                    </div>
+                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
+                      Otras celebraciones o eventos
+                    </div>
+                  </Label>
+                </div>
               </RadioGroup>
             </CardContent>
           </Card>
@@ -185,18 +196,18 @@ export default function ConfigurarPage() {
                     <div className="flex-1">
                       <Label htmlFor="pequeño" className="cursor-pointer">
                         <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
-                          Lugar Pequeño
+                          Sala Pequeña
                         </div>
                         <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                          Ideal para 20-50 personas
+                          Hasta 120 personas
                         </div>
                       </Label>
                     </div>
                   </div>
                   <div className="sm:ml-6 self-center">
                     <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sala_pequen%CC%83a.JPG-CBt6jSxzleCQAmph6PFFWuvMAnKYlk.jpeg"
-                      alt="Salón pequeño e íntimo"
+                      src="/sala-pequena.jpeg"
+                      alt="Sala pequeña con iluminación azul"
                       width={120}
                       height={80}
                       className="object-cover shadow-sm group-hover:shadow-md transition-shadow duration-300 rounded"
@@ -212,18 +223,18 @@ export default function ConfigurarPage() {
                     <div className="flex-1">
                       <Label htmlFor="grande" className="cursor-pointer">
                         <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
-                          Lugar Grande
+                          Sala Grande
                         </div>
                         <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                          Ideal para 50+ personas
+                          + de 250 personas
                         </div>
                       </Label>
                     </div>
                   </div>
                   <div className="sm:ml-6 self-center">
                     <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sala_grande.JPG-B3uNcFvKfQGYkjARGrfIVs5wkfmtA7.jpeg"
-                      alt="Salón grande y amplio"
+                      src="/sala-grande.jpeg"
+                      alt="Sala grande con iluminación morada"
                       width={120}
                       height={80}
                       className="object-cover shadow-sm group-hover:shadow-md transition-shadow duration-300 rounded"
@@ -361,7 +372,7 @@ export default function ConfigurarPage() {
             </CardContent>
           </Card>
 
-          {formData.curso === "2bach" && (
+          {(formData.curso === "2bach" || formData.curso === "otros") && (
             <Card className="border-stone-200 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white">
               <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6 pt-4 sm:pt-6">
                 <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl font-medium text-stone-900">
@@ -371,7 +382,7 @@ export default function ConfigurarPage() {
                   Barra Libre de Alcohol
                 </CardTitle>
                 <CardDescription className="text-sm sm:text-base text-stone-600 leading-relaxed">
-                  Disponible solo para estudiantes de 2º de Bachillerato (mayores de edad)
+                  Bebidas alcohólicas disponibles durante el evento
                 </CardDescription>
               </CardHeader>
               <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
