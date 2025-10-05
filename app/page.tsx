@@ -61,9 +61,10 @@ export default function HomePage() {
           <Link href="/configurar">
             <Button
               size="lg"
-              className="text-base px-12 py-7 bg-primary hover:bg-primary/90 text-stone-900 font-medium tracking-wide transition-all duration-300 hover:scale-105 shadow-2xl"
+              className="group relative text-lg px-14 py-8 bg-gradient-to-r from-primary via-primary to-yellow-400 hover:from-yellow-400 hover:via-primary hover:to-primary text-stone-900 font-semibold tracking-wide transition-all duration-500 hover:scale-110 shadow-lg border-2 border-yellow-300/50 hover:border-yellow-200"
             >
-              Organizar mi Orla
+              <Sparkles className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
+              <span className="relative">Organizar mi Orla</span>
             </Button>
           </Link>
         </div>
