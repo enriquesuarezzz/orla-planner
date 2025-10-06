@@ -128,3 +128,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Adding graduation cap celebration animation */
+@keyframes flyUpCap {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(var(--drift)) rotate(720deg);
+    opacity: 0;
+  }
+}
