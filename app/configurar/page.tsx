@@ -112,12 +112,12 @@ export default function ConfigurarPage() {
     for (let i = 0; i < numberOfCaps; i++) {
       setTimeout(() => {
         const cap = document.createElement("img")
-        cap.src = "/sombrero.jpg"
+        cap.src = "/sombrero.png"
         cap.style.position = "fixed"
-        cap.style.width = "50px"
-        cap.style.height = "50px"
+        cap.style.width = "100px"
+        cap.style.height = "100px"
         cap.style.left = `${Math.random() * 100}vw`
-        cap.style.bottom = "-60px"
+        cap.style.bottom = "-120px"
         cap.style.zIndex = "9999"
         cap.style.pointerEvents = "none"
         cap.style.objectFit = "contain"
