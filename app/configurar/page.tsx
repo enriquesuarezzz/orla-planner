@@ -13,12 +13,27 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { ArrowLeft, MapPin, Users, Sparkles, Calendar, GraduationCap, Utensils, Wine, Music } from "lucide-react"
+import { ArrowLeft, MapPin, Users, Sparkles, Calendar, GraduationCap, Utensils, Wine, Music } from "lucide-react"
 import Image from "next/image"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { sendOrlaRequest } from "./actions"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { sendOrlaRequest } from "./actions"
 
 export default function ConfigurarPage() {
   const { toast } = useToast()
+  const [showUserDataDialog, setShowUserDataDialog] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [userData, setUserData] = useState({
+    nombre: "",
+    apellido: "",
+    dni: "",
+    calle: "",
+    codigoPostal: "",
+    nombreCentro: "",
+    email: "",
+    telefono: "",
+  })
   const [showUserDataDialog, setShowUserDataDialog] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [userData, setUserData] = useState({
@@ -39,11 +54,14 @@ export default function ConfigurarPage() {
     cotillon: false,
     dj: "",
     catering: "",
+    catering: "",
     barraLibre: false,
     fecha: "",
     hora: "",
     comentarios: "",
   })
+
+  const today = new Date().toISOString().split("T")[0]
 
   const today = new Date().toISOString().split("T")[0]
 
@@ -70,6 +88,12 @@ export default function ConfigurarPage() {
       )
     }
 
+    if (formData.tipoLugar === "pequeño" && Number.parseInt(formData.numeroPersonas) > 120) {
+      errors.push(
+        "La Sala Pequeña tiene capacidad máxima de 120 personas. Por favor, selecciona la Sala Grande o reduce el número de invitados.",
+      )
+    }
+
     if (!formData.fecha) {
       errors.push("Debes seleccionar una fecha")
     }
@@ -78,6 +102,8 @@ export default function ConfigurarPage() {
       errors.push("Debes seleccionar una hora")
     }
 
+    if (!formData.catering) {
+      errors.push("Debes seleccionar un servicio de catering")
     if (!formData.catering) {
       errors.push("Debes seleccionar un servicio de catering")
     }
@@ -180,7 +206,53 @@ export default function ConfigurarPage() {
           description: "Hemos recibido tu solicitud. Te contactaremos pronto para confirmar los detalles de tu orla.",
           variant: "default",
         })
+        toast({
+          title: "¡Solicitud enviada con éxito!",
+          description: "Hemos recibido tu solicitud. Te contactaremos pronto para confirmar los detalles de tu orla.",
+          variant: "default",
+        })
 
+        setShowUserDataDialog(false)
+
+        // Reset forms
+        setFormData({
+          tipoLugar: "",
+          numeroPersonas: "",
+          curso: "",
+          cotillon: false,
+          dj: "",
+          catering: "",
+          barraLibre: false,
+          fecha: "",
+          hora: "",
+          comentarios: "",
+        })
+        setUserData({
+          nombre: "",
+          apellido: "",
+          dni: "",
+          calle: "",
+          codigoPostal: "",
+          nombreCentro: "",
+          email: "",
+          telefono: "",
+        })
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error al enviar",
+          description: result.error || "Hubo un problema al enviar tu solicitud. Por favor, inténtalo de nuevo.",
+        })
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error al enviar",
+        description: "Hubo un problema al enviar tu solicitud. Por favor, inténtalo de nuevo.",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
         setShowUserDataDialog(false)
 
         // Reset forms
@@ -407,6 +479,15 @@ export default function ConfigurarPage() {
                   </p>
                 </div>
               )}
+                max="500"
+              />
+              {formData.tipoLugar === "pequeño" && Number.parseInt(formData.numeroPersonas) > 120 && (
+                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md">
+                  <p className="text-sm text-amber-800">
+                    ⚠️ La Sala Pequeña tiene capacidad máxima de 120 personas. Por favor, selecciona la Sala Grande.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -434,6 +515,7 @@ export default function ConfigurarPage() {
                     value={formData.fecha}
                     onChange={(e) => setFormData({ ...formData, fecha: e.target.value })}
                     className="border-stone-300 focus:border-primary text-sm sm:text-base"
+                    min={today}
                     min={today}
                   />
                 </div>
@@ -463,8 +545,26 @@ export default function ConfigurarPage() {
               </CardTitle>
               <CardDescription className="text-sm sm:text-base text-stone-600 leading-relaxed">
                 Selecciona el servicio de comida y bebida que deseas
+                Selecciona el servicio de comida y bebida que deseas
               </CardDescription>
             </CardHeader>
+            <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+              <RadioGroup
+                value={formData.catering}
+                onValueChange={(value) => setFormData({ ...formData, catering: value })}
+                className="space-y-3"
+              >
+                <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
+                  <RadioGroupItem value="coctel-bienvenida" id="coctel-bienvenida" />
+                  <Label htmlFor="coctel-bienvenida" className="flex-1 cursor-pointer">
+                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
+                      Cóctel de Bienvenida
+                    </div>
+                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
+                      Bebidas y aperitivos al inicio del evento
+                    </div>
+                  </Label>
+                </div>
             <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
               <RadioGroup
                 value={formData.catering}
@@ -506,7 +606,57 @@ export default function ConfigurarPage() {
                     </div>
                   </Label>
                 </div>
+                <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
+                  <RadioGroupItem value="coctel-bienvenida-picoteo-gala" id="coctel-bienvenida-picoteo-gala" />
+                  <Label htmlFor="coctel-bienvenida-picoteo-gala" className="flex-1 cursor-pointer">
+                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
+                      Cóctel de Bienvenida + Picoteo de Gala
+                    </div>
+                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
+                      Bebidas de bienvenida y canapés premium durante el evento
+                    </div>
+                  </Label>
+                </div>
 
+                <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
+                  <RadioGroupItem value="picoteo-gala" id="picoteo-gala" />
+                  <Label htmlFor="picoteo-gala" className="flex-1 cursor-pointer">
+                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
+                      Picoteo de Gala
+                    </div>
+                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
+                      Canapés y aperitivos premium durante el evento
+                    </div>
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
+                  <RadioGroupItem value="picoteo-final" id="picoteo-final" />
+                  <Label htmlFor="picoteo-final" className="flex-1 cursor-pointer">
+                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
+                      Picoteo al Finalizar
+                    </div>
+                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
+                      Snacks y bebidas para el cierre del evento
+                    </div>
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
+                  <RadioGroupItem
+                    value="coctel-bienvenida-picoteo-gala-final"
+                    id="coctel-bienvenida-picoteo-gala-final"
+                  />
+                  <Label htmlFor="coctel-bienvenida-picoteo-gala-final" className="flex-1 cursor-pointer">
+                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
+                      Cóctel de Bienvenida + Picoteo de Gala + Picoteo Final
+                    </div>
+                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
+                      Servicio completo de catering durante todo el evento
+                    </div>
+                  </Label>
+                </div>
+              </RadioGroup>
                 <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
                   <RadioGroupItem value="picoteo-final" id="picoteo-final" />
                   <Label htmlFor="picoteo-final" className="flex-1 cursor-pointer">
@@ -620,6 +770,51 @@ export default function ConfigurarPage() {
             <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6 pt-4 sm:pt-6">
               <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl font-medium text-stone-900">
                 <div className="p-1.5 sm:p-2 bg-primary/10">
+                  <Music className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                </div>
+                Música y DJ
+              </CardTitle>
+              <CardDescription className="text-sm sm:text-base text-stone-600 leading-relaxed">
+                ¿Necesitas DJ profesional o prefieres poner tu propia música?
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+              <RadioGroup
+                value={formData.dj}
+                onValueChange={(value) => setFormData({ ...formData, dj: value })}
+                className="space-y-3"
+              >
+                <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
+                  <RadioGroupItem value="profesional" id="dj-profesional" />
+                  <Label htmlFor="dj-profesional" className="flex-1 cursor-pointer">
+                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
+                      DJ Profesional
+                    </div>
+                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
+                      Incluye equipo de sonido y música variada
+                    </div>
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
+                  <RadioGroupItem value="propia" id="musica-propia" />
+                  <Label htmlFor="musica-propia" className="flex-1 cursor-pointer">
+                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
+                      Música Propia
+                    </div>
+                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
+                      Traemos nuestro equipo de sonido, tú pones la música
+                    </div>
+                  </Label>
+                </div>
+              </RadioGroup>
+            </CardContent>
+          </Card>
+
+          <Card className="border-stone-200 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white">
+            <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6 pt-4 sm:pt-6">
+              <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl font-medium text-stone-900">
+                <div className="p-1.5 sm:p-2 bg-primary/10">
                   <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 </div>
                 Cotillón
@@ -675,6 +870,152 @@ export default function ConfigurarPage() {
           </div>
         </form>
       </main>
+
+      <Dialog open={showUserDataDialog} onOpenChange={setShowUserDataDialog}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-serif text-stone-900">Datos de Contacto</DialogTitle>
+            <DialogDescription className="text-stone-600">
+              Por favor, completa tus datos para que podamos enviarte el presupuesto
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleFinalSubmit} className="space-y-4 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="nombre" className="text-stone-700 mb-2 block">
+                  Nombre *
+                </Label>
+                <Input
+                  id="nombre"
+                  value={userData.nombre}
+                  onChange={(e) => setUserData({ ...userData, nombre: e.target.value })}
+                  className="border-stone-300 focus:border-primary"
+                  placeholder="Tu nombre"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="apellido" className="text-stone-700 mb-2 block">
+                  Apellido *
+                </Label>
+                <Input
+                  id="apellido"
+                  value={userData.apellido}
+                  onChange={(e) => setUserData({ ...userData, apellido: e.target.value })}
+                  className="border-stone-300 focus:border-primary"
+                  placeholder="Tu apellido"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="dni" className="text-stone-700 mb-2 block">
+                DNI *
+              </Label>
+              <Input
+                id="dni"
+                value={userData.dni}
+                onChange={(e) => setUserData({ ...userData, dni: e.target.value })}
+                className="border-stone-300 focus:border-primary"
+                placeholder="12345678A"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="calle" className="text-stone-700 mb-2 block">
+                Calle *
+              </Label>
+              <Input
+                id="calle"
+                value={userData.calle}
+                onChange={(e) => setUserData({ ...userData, calle: e.target.value })}
+                className="border-stone-300 focus:border-primary"
+                placeholder="Calle Principal, 123"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="codigoPostal" className="text-stone-700 mb-2 block">
+                Código Postal *
+              </Label>
+              <Input
+                id="codigoPostal"
+                value={userData.codigoPostal}
+                onChange={(e) => setUserData({ ...userData, codigoPostal: e.target.value })}
+                className="border-stone-300 focus:border-primary"
+                placeholder="35500"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="nombreCentro" className="text-stone-700 mb-2 block">
+                Nombre del Centro *
+              </Label>
+              <Input
+                id="nombreCentro"
+                value={userData.nombreCentro}
+                onChange={(e) => setUserData({ ...userData, nombreCentro: e.target.value })}
+                className="border-stone-300 focus:border-primary"
+                placeholder="IES Lanzarote"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="email" className="text-stone-700 mb-2 block">
+                Email *
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={userData.email}
+                onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                className="border-stone-300 focus:border-primary"
+                placeholder="tu@email.com"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="telefono" className="text-stone-700 mb-2 block">
+                Teléfono *
+              </Label>
+              <Input
+                id="telefono"
+                type="tel"
+                value={userData.telefono}
+                onChange={(e) => setUserData({ ...userData, telefono: e.target.value })}
+                className="border-stone-300 focus:border-primary"
+                placeholder="600 123 456"
+                required
+              />
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowUserDataDialog(false)}
+                className="border-stone-300"
+                disabled={isSubmitting}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                className="bg-primary hover:bg-primary/90 text-stone-900 font-medium"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Enviando..." : "Enviar Solicitud"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={showUserDataDialog} onOpenChange={setShowUserDataDialog}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
