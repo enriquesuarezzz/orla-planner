@@ -1,26 +1,48 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/hooks/use-toast"
-import { ArrowLeft, MapPin, Users, Sparkles, Calendar, GraduationCap, Utensils, Wine, Music } from "lucide-react"
-import Image from "next/image"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { sendOrlaRequest } from "./actions"
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import {
+  ArrowLeft,
+  MapPin,
+  Users,
+  Sparkles,
+  Calendar,
+  GraduationCap,
+  Utensils,
+  Wine,
+  Music,
+} from "lucide-react";
+import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { sendOrlaRequest } from "./actions";
 
 export default function ConfigurarPage() {
-  const { toast } = useToast()
-  const [showUserDataDialog, setShowUserDataDialog] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { toast } = useToast();
+  const [showUserDataDialog, setShowUserDataDialog] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [userData, setUserData] = useState({
     nombre: "",
     apellido: "",
@@ -30,7 +52,7 @@ export default function ConfigurarPage() {
     nombreCentro: "",
     email: "",
     telefono: "",
-  })
+  });
 
   const [formData, setFormData] = useState({
     tipoLugar: "",
@@ -43,47 +65,53 @@ export default function ConfigurarPage() {
     fecha: "",
     hora: "",
     comentarios: "",
-  })
+  });
 
-  const today = new Date().toISOString().split("T")[0]
+  const today = new Date().toISOString().split("T")[0];
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const errors: string[] = []
+    const errors: string[] = [];
 
     if (!formData.curso) {
-      errors.push("Debes seleccionar un curso")
+      errors.push("Debes seleccionar un curso");
     }
 
     if (!formData.tipoLugar) {
-      errors.push("Debes seleccionar el tipo de lugar")
+      errors.push("Debes seleccionar el tipo de lugar");
     }
 
-    if (!formData.numeroPersonas || Number.parseInt(formData.numeroPersonas) < 1) {
-      errors.push("Debes indicar el número de invitados")
+    if (
+      !formData.numeroPersonas ||
+      Number.parseInt(formData.numeroPersonas) < 1
+    ) {
+      errors.push("Debes indicar el número de invitados");
     }
 
-    if (formData.tipoLugar === "pequeño" && Number.parseInt(formData.numeroPersonas) > 120) {
+    if (
+      formData.tipoLugar === "pequeño" &&
+      Number.parseInt(formData.numeroPersonas) > 120
+    ) {
       errors.push(
-        "La Sala Pequeña tiene capacidad máxima de 120 personas. Por favor, selecciona la Sala Grande o reduce el número de invitados.",
-      )
+        "La Sala Pequeña tiene capacidad máxima de 120 personas. Por favor, selecciona la Sala Grande o reduce el número de invitados."
+      );
     }
 
     if (!formData.fecha) {
-      errors.push("Debes seleccionar una fecha")
+      errors.push("Debes seleccionar una fecha");
     }
 
     if (!formData.hora) {
-      errors.push("Debes seleccionar una hora")
+      errors.push("Debes seleccionar una hora");
     }
 
     if (!formData.catering) {
-      errors.push("Debes seleccionar un servicio de catering")
+      errors.push("Debes seleccionar un servicio de catering");
     }
 
     if (!formData.dj) {
-      errors.push("Debes seleccionar una opción de música")
+      errors.push("Debes seleccionar una opción de música");
     }
 
     if (errors.length > 0) {
@@ -97,61 +125,63 @@ export default function ConfigurarPage() {
             ))}
           </ul>
         ),
-      })
-      return
+      });
+      return;
     }
 
-    setShowUserDataDialog(true)
-  }
+    setShowUserDataDialog(true);
+  };
 
   const triggerCapCelebration = () => {
-    console.log("[v0] Triggering graduation cap celebration!")
-    const numberOfCaps = 30
-    const container = document.body
+    console.log("[v0] Triggering graduation cap celebration!");
+    const numberOfCaps = 30;
+    const container = document.body;
 
     for (let i = 0; i < numberOfCaps; i++) {
       setTimeout(() => {
-        const cap = document.createElement("img")
-        cap.src = "/sombrero.jpg"
-        cap.style.position = "fixed"
-        cap.style.width = "50px"
-        cap.style.height = "50px"
-        cap.style.left = `${Math.random() * 100}vw`
-        cap.style.bottom = "-60px"
-        cap.style.zIndex = "9999"
-        cap.style.pointerEvents = "none"
-        cap.style.objectFit = "contain"
+        const cap = document.createElement("img");
+        cap.src = "/sombrero.png";
+        cap.style.position = "fixed";
+        cap.style.width = "100px";
+        cap.style.height = "100px";
+        cap.style.left = `${Math.random() * 100}vw`;
+        cap.style.bottom = "-120px";
+        cap.style.zIndex = "9999";
+        cap.style.pointerEvents = "none";
+        cap.style.objectFit = "contain";
 
-        const duration = 3 + Math.random() * 2
-        const drift = (Math.random() - 0.5) * 300
+        const duration = 3 + Math.random() * 2;
+        const drift = (Math.random() - 0.5) * 300;
 
-        cap.style.animation = `flyUpCap ${duration}s ease-out forwards`
-        cap.style.setProperty("--drift", `${drift}px`)
+        cap.style.animation = `flyUpCap ${duration}s ease-out forwards`;
+        cap.style.setProperty("--drift", `${drift}px`);
 
-        container.appendChild(cap)
-        console.log("[v0] Cap added to DOM", { duration, drift })
+        container.appendChild(cap);
+        console.log("[v0] Cap added to DOM", { duration, drift });
 
         setTimeout(() => {
-          cap.remove()
-          console.log("[v0] Cap removed from DOM")
-        }, duration * 1000)
-      }, i * 80)
+          cap.remove();
+          console.log("[v0] Cap removed from DOM");
+        }, duration * 1000);
+      }, i * 80);
     }
-  }
+  };
 
   const handleFinalSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const errors: string[] = []
+    const errors: string[] = [];
 
-    if (!userData.nombre.trim()) errors.push("Nombre es obligatorio")
-    if (!userData.apellido.trim()) errors.push("Apellido es obligatorio")
-    if (!userData.dni.trim()) errors.push("DNI es obligatorio")
-    if (!userData.calle.trim()) errors.push("Calle es obligatoria")
-    if (!userData.codigoPostal.trim()) errors.push("Código postal es obligatorio")
-    if (!userData.nombreCentro.trim()) errors.push("Nombre del centro es obligatorio")
-    if (!userData.email.trim()) errors.push("Email es obligatorio")
-    if (!userData.telefono.trim()) errors.push("Teléfono es obligatorio")
+    if (!userData.nombre.trim()) errors.push("Nombre es obligatorio");
+    if (!userData.apellido.trim()) errors.push("Apellido es obligatorio");
+    if (!userData.dni.trim()) errors.push("DNI es obligatorio");
+    if (!userData.calle.trim()) errors.push("Calle es obligatoria");
+    if (!userData.codigoPostal.trim())
+      errors.push("Código postal es obligatorio");
+    if (!userData.nombreCentro.trim())
+      errors.push("Nombre del centro es obligatorio");
+    if (!userData.email.trim()) errors.push("Email es obligatorio");
+    if (!userData.telefono.trim()) errors.push("Teléfono es obligatorio");
 
     if (errors.length > 0) {
       toast({
@@ -164,24 +194,25 @@ export default function ConfigurarPage() {
             ))}
           </ul>
         ),
-      })
-      return
+      });
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
-      const result = await sendOrlaRequest({ ...formData, ...userData })
+      const result = await sendOrlaRequest({ ...formData, ...userData });
 
       if (result.success) {
-        triggerCapCelebration()
+        triggerCapCelebration();
 
         toast({
           title: "¡Solicitud enviada con éxito!",
-          description: "Hemos recibido tu solicitud. Te contactaremos pronto para confirmar los detalles de tu orla.",
+          description:
+            "Hemos recibido tu solicitud. Te contactaremos pronto para confirmar los detalles de tu orla.",
           variant: "default",
-        })
+        });
 
-        setShowUserDataDialog(false)
+        setShowUserDataDialog(false);
 
         // Reset forms
         setFormData({
@@ -195,7 +226,7 @@ export default function ConfigurarPage() {
           fecha: "",
           hora: "",
           comentarios: "",
-        })
+        });
         setUserData({
           nombre: "",
           apellido: "",
@@ -205,24 +236,27 @@ export default function ConfigurarPage() {
           nombreCentro: "",
           email: "",
           telefono: "",
-        })
+        });
       } else {
         toast({
           variant: "destructive",
           title: "Error al enviar",
-          description: result.error || "Hubo un problema al enviar tu solicitud. Por favor, inténtalo de nuevo.",
-        })
+          description:
+            result.error ||
+            "Hubo un problema al enviar tu solicitud. Por favor, inténtalo de nuevo.",
+        });
       }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error al enviar",
-        description: "Hubo un problema al enviar tu solicitud. Por favor, inténtalo de nuevo.",
-      })
+        description:
+          "Hubo un problema al enviar tu solicitud. Por favor, inténtalo de nuevo.",
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -263,7 +297,9 @@ export default function ConfigurarPage() {
             <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
               <RadioGroup
                 value={formData.curso}
-                onValueChange={(value) => setFormData({ ...formData, curso: value })}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, curso: value })
+                }
                 className="space-y-3"
               >
                 <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
@@ -318,7 +354,9 @@ export default function ConfigurarPage() {
             <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
               <RadioGroup
                 value={formData.tipoLugar}
-                onValueChange={(value) => setFormData({ ...formData, tipoLugar: value })}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, tipoLugar: value })
+                }
                 className="space-y-3"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group space-y-3 sm:space-y-0">
@@ -395,18 +433,22 @@ export default function ConfigurarPage() {
                 type="number"
                 placeholder="Ej: 35"
                 value={formData.numeroPersonas}
-                onChange={(e) => setFormData({ ...formData, numeroPersonas: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, numeroPersonas: e.target.value })
+                }
                 className="max-w-xs text-base sm:text-lg py-5 sm:py-6 border-stone-300 focus:border-primary"
                 min="1"
                 max="500"
               />
-              {formData.tipoLugar === "pequeño" && Number.parseInt(formData.numeroPersonas) > 120 && (
-                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md">
-                  <p className="text-sm text-amber-800">
-                    ⚠️ La Sala Pequeña tiene capacidad máxima de 120 personas. Por favor, selecciona la Sala Grande.
-                  </p>
-                </div>
-              )}
+              {formData.tipoLugar === "pequeño" &&
+                Number.parseInt(formData.numeroPersonas) > 120 && (
+                  <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md">
+                    <p className="text-sm text-amber-800">
+                      ⚠️ La Sala Pequeña tiene capacidad máxima de 120 personas.
+                      Por favor, selecciona la Sala Grande.
+                    </p>
+                  </div>
+                )}
             </CardContent>
           </Card>
 
@@ -425,27 +467,37 @@ export default function ConfigurarPage() {
             <CardContent className="space-y-4 px-4 sm:px-6 pb-4 sm:pb-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="fecha" className="text-sm sm:text-base text-stone-700 mb-2 block">
+                  <Label
+                    htmlFor="fecha"
+                    className="text-sm sm:text-base text-stone-700 mb-2 block"
+                  >
                     Fecha preferida
                   </Label>
                   <Input
                     id="fecha"
                     type="date"
                     value={formData.fecha}
-                    onChange={(e) => setFormData({ ...formData, fecha: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fecha: e.target.value })
+                    }
                     className="border-stone-300 focus:border-primary text-sm sm:text-base"
                     min={today}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="hora" className="text-sm sm:text-base text-stone-700 mb-2 block">
+                  <Label
+                    htmlFor="hora"
+                    className="text-sm sm:text-base text-stone-700 mb-2 block"
+                  >
                     Hora de inicio
                   </Label>
                   <Input
                     id="hora"
                     type="time"
                     value={formData.hora}
-                    onChange={(e) => setFormData({ ...formData, hora: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, hora: e.target.value })
+                    }
                     className="border-stone-300 focus:border-primary text-sm sm:text-base"
                   />
                 </div>
@@ -468,12 +520,20 @@ export default function ConfigurarPage() {
             <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
               <RadioGroup
                 value={formData.catering}
-                onValueChange={(value) => setFormData({ ...formData, catering: value })}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, catering: value })
+                }
                 className="space-y-3"
               >
                 <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
-                  <RadioGroupItem value="coctel-bienvenida" id="coctel-bienvenida" />
-                  <Label htmlFor="coctel-bienvenida" className="flex-1 cursor-pointer">
+                  <RadioGroupItem
+                    value="coctel-bienvenida"
+                    id="coctel-bienvenida"
+                  />
+                  <Label
+                    htmlFor="coctel-bienvenida"
+                    className="flex-1 cursor-pointer"
+                  >
                     <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
                       Cóctel de Bienvenida
                     </div>
@@ -484,8 +544,14 @@ export default function ConfigurarPage() {
                 </div>
 
                 <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
-                  <RadioGroupItem value="coctel-bienvenida-picoteo-gala" id="coctel-bienvenida-picoteo-gala" />
-                  <Label htmlFor="coctel-bienvenida-picoteo-gala" className="flex-1 cursor-pointer">
+                  <RadioGroupItem
+                    value="coctel-bienvenida-picoteo-gala"
+                    id="coctel-bienvenida-picoteo-gala"
+                  />
+                  <Label
+                    htmlFor="coctel-bienvenida-picoteo-gala"
+                    className="flex-1 cursor-pointer"
+                  >
                     <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
                       Cóctel de Bienvenida + Picoteo de Gala
                     </div>
@@ -497,7 +563,10 @@ export default function ConfigurarPage() {
 
                 <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
                   <RadioGroupItem value="picoteo-gala" id="picoteo-gala" />
-                  <Label htmlFor="picoteo-gala" className="flex-1 cursor-pointer">
+                  <Label
+                    htmlFor="picoteo-gala"
+                    className="flex-1 cursor-pointer"
+                  >
                     <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
                       Picoteo de Gala
                     </div>
@@ -509,7 +578,10 @@ export default function ConfigurarPage() {
 
                 <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
                   <RadioGroupItem value="picoteo-final" id="picoteo-final" />
-                  <Label htmlFor="picoteo-final" className="flex-1 cursor-pointer">
+                  <Label
+                    htmlFor="picoteo-final"
+                    className="flex-1 cursor-pointer"
+                  >
                     <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
                       Picoteo al Finalizar
                     </div>
@@ -524,7 +596,10 @@ export default function ConfigurarPage() {
                     value="coctel-bienvenida-picoteo-gala-final"
                     id="coctel-bienvenida-picoteo-gala-final"
                   />
-                  <Label htmlFor="coctel-bienvenida-picoteo-gala-final" className="flex-1 cursor-pointer">
+                  <Label
+                    htmlFor="coctel-bienvenida-picoteo-gala-final"
+                    className="flex-1 cursor-pointer"
+                  >
                     <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
                       Cóctel de Bienvenida + Picoteo de Gala + Picoteo Final
                     </div>
@@ -555,7 +630,12 @@ export default function ConfigurarPage() {
                   <Checkbox
                     id="barraLibre"
                     checked={formData.barraLibre}
-                    onCheckedChange={(checked) => setFormData({ ...formData, barraLibre: checked as boolean })}
+                    onCheckedChange={(checked) =>
+                      setFormData({
+                        ...formData,
+                        barraLibre: checked as boolean,
+                      })
+                    }
                     className="mt-1"
                   />
                   <Label htmlFor="barraLibre" className="cursor-pointer flex-1">
@@ -586,12 +666,17 @@ export default function ConfigurarPage() {
             <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
               <RadioGroup
                 value={formData.dj}
-                onValueChange={(value) => setFormData({ ...formData, dj: value })}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, dj: value })
+                }
                 className="space-y-3"
               >
                 <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
                   <RadioGroupItem value="profesional" id="dj-profesional" />
-                  <Label htmlFor="dj-profesional" className="flex-1 cursor-pointer">
+                  <Label
+                    htmlFor="dj-profesional"
+                    className="flex-1 cursor-pointer"
+                  >
                     <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
                       DJ Profesional
                     </div>
@@ -603,7 +688,10 @@ export default function ConfigurarPage() {
 
                 <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
                   <RadioGroupItem value="propia" id="musica-propia" />
-                  <Label htmlFor="musica-propia" className="flex-1 cursor-pointer">
+                  <Label
+                    htmlFor="musica-propia"
+                    className="flex-1 cursor-pointer"
+                  >
                     <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
                       Música Propia
                     </div>
@@ -633,11 +721,15 @@ export default function ConfigurarPage() {
                 <Checkbox
                   id="cotillon"
                   checked={formData.cotillon}
-                  onCheckedChange={(checked) => setFormData({ ...formData, cotillon: checked as boolean })}
+                  onCheckedChange={(checked) =>
+                    setFormData({ ...formData, cotillon: checked as boolean })
+                  }
                   className="mt-1"
                 />
                 <Label htmlFor="cotillon" className="cursor-pointer flex-1">
-                  <div className="font-medium text-sm sm:text-base text-stone-900">Sí, quiero cotillón incluido</div>
+                  <div className="font-medium text-sm sm:text-base text-stone-900">
+                    Sí, quiero cotillón incluido
+                  </div>
                   <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
                     Sombreros, serpentinas, globos, etc.
                   </div>
@@ -648,7 +740,9 @@ export default function ConfigurarPage() {
 
           <Card className="border-stone-200 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white">
             <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6 pt-4 sm:pt-6">
-              <CardTitle className="text-lg sm:text-xl font-medium text-stone-900">Comentarios Adicionales</CardTitle>
+              <CardTitle className="text-lg sm:text-xl font-medium text-stone-900">
+                Comentarios Adicionales
+              </CardTitle>
               <CardDescription className="text-sm sm:text-base text-stone-600 leading-relaxed">
                 ¿Hay algo más que quieras contarnos sobre tu orla?
               </CardDescription>
@@ -657,7 +751,9 @@ export default function ConfigurarPage() {
               <Textarea
                 placeholder="Ej: Queremos decoración temática de los años 80, necesitamos espacio para fotos, etc."
                 value={formData.comentarios}
-                onChange={(e) => setFormData({ ...formData, comentarios: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, comentarios: e.target.value })
+                }
                 rows={4}
                 className="border-stone-300 focus:border-primary text-sm sm:text-base"
               />
@@ -679,9 +775,12 @@ export default function ConfigurarPage() {
       <Dialog open={showUserDataDialog} onOpenChange={setShowUserDataDialog}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-serif text-stone-900">Datos de Contacto</DialogTitle>
+            <DialogTitle className="text-2xl font-serif text-stone-900">
+              Datos de Contacto
+            </DialogTitle>
             <DialogDescription className="text-stone-600">
-              Por favor, completa tus datos para que podamos enviarte el presupuesto
+              Por favor, completa tus datos para que podamos enviarte el
+              presupuesto
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleFinalSubmit} className="space-y-4 mt-4">
@@ -693,7 +792,9 @@ export default function ConfigurarPage() {
                 <Input
                   id="nombre"
                   value={userData.nombre}
-                  onChange={(e) => setUserData({ ...userData, nombre: e.target.value })}
+                  onChange={(e) =>
+                    setUserData({ ...userData, nombre: e.target.value })
+                  }
                   className="border-stone-300 focus:border-primary"
                   placeholder="Tu nombre"
                   required
@@ -706,7 +807,9 @@ export default function ConfigurarPage() {
                 <Input
                   id="apellido"
                   value={userData.apellido}
-                  onChange={(e) => setUserData({ ...userData, apellido: e.target.value })}
+                  onChange={(e) =>
+                    setUserData({ ...userData, apellido: e.target.value })
+                  }
                   className="border-stone-300 focus:border-primary"
                   placeholder="Tu apellido"
                   required
@@ -721,7 +824,9 @@ export default function ConfigurarPage() {
               <Input
                 id="dni"
                 value={userData.dni}
-                onChange={(e) => setUserData({ ...userData, dni: e.target.value })}
+                onChange={(e) =>
+                  setUserData({ ...userData, dni: e.target.value })
+                }
                 className="border-stone-300 focus:border-primary"
                 placeholder="12345678A"
                 required
@@ -735,7 +840,9 @@ export default function ConfigurarPage() {
               <Input
                 id="calle"
                 value={userData.calle}
-                onChange={(e) => setUserData({ ...userData, calle: e.target.value })}
+                onChange={(e) =>
+                  setUserData({ ...userData, calle: e.target.value })
+                }
                 className="border-stone-300 focus:border-primary"
                 placeholder="Calle Principal, 123"
                 required
@@ -743,13 +850,18 @@ export default function ConfigurarPage() {
             </div>
 
             <div>
-              <Label htmlFor="codigoPostal" className="text-stone-700 mb-2 block">
+              <Label
+                htmlFor="codigoPostal"
+                className="text-stone-700 mb-2 block"
+              >
                 Código Postal *
               </Label>
               <Input
                 id="codigoPostal"
                 value={userData.codigoPostal}
-                onChange={(e) => setUserData({ ...userData, codigoPostal: e.target.value })}
+                onChange={(e) =>
+                  setUserData({ ...userData, codigoPostal: e.target.value })
+                }
                 className="border-stone-300 focus:border-primary"
                 placeholder="35500"
                 required
@@ -757,13 +869,18 @@ export default function ConfigurarPage() {
             </div>
 
             <div>
-              <Label htmlFor="nombreCentro" className="text-stone-700 mb-2 block">
+              <Label
+                htmlFor="nombreCentro"
+                className="text-stone-700 mb-2 block"
+              >
                 Nombre del Centro *
               </Label>
               <Input
                 id="nombreCentro"
                 value={userData.nombreCentro}
-                onChange={(e) => setUserData({ ...userData, nombreCentro: e.target.value })}
+                onChange={(e) =>
+                  setUserData({ ...userData, nombreCentro: e.target.value })
+                }
                 className="border-stone-300 focus:border-primary"
                 placeholder="IES Lanzarote"
                 required
@@ -778,7 +895,9 @@ export default function ConfigurarPage() {
                 id="email"
                 type="email"
                 value={userData.email}
-                onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                onChange={(e) =>
+                  setUserData({ ...userData, email: e.target.value })
+                }
                 className="border-stone-300 focus:border-primary"
                 placeholder="tu@email.com"
                 required
@@ -793,7 +912,9 @@ export default function ConfigurarPage() {
                 id="telefono"
                 type="tel"
                 value={userData.telefono}
-                onChange={(e) => setUserData({ ...userData, telefono: e.target.value })}
+                onChange={(e) =>
+                  setUserData({ ...userData, telefono: e.target.value })
+                }
                 className="border-stone-300 focus:border-primary"
                 placeholder="600 123 456"
                 required
@@ -822,5 +943,5 @@ export default function ConfigurarPage() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }
