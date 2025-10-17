@@ -106,7 +106,7 @@ export async function sendOrlaRequest(data: OrlaRequestData) {
 
     await resend.emails.send({
       from: "Instituto Orlas <onboarding@resend.dev>",
-      to: "antoniogb2208@gmail.com",
+      to: "infobermejaproducciones@gmail.com",
       subject: `Nueva Solicitud de Orla - ${data.nombre} ${data.apellido} (${data.nombreCentro})`,
       html: emailHtml,
     })
