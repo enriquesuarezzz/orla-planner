@@ -136,26 +136,16 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="font-medium mb-6 text-white text-sm tracking-wider uppercase">Servicios</h4>
+              <h4 className="font-medium mb-6 text-white text-sm tracking-wider uppercase">Información Legal</h4>
               <ul className="space-y-3 text-stone-400 text-sm">
                 <li>
-                  <Link href="/configurar" className="hover:text-primary transition-colors cursor-pointer">
-                    Organización de orlas
+                  <Link href="/aviso-legal" className="hover:text-primary transition-colors cursor-pointer">
+                    Aviso Legal
                   </Link>
                 </li>
                 <li>
-                  <Link href="/configurar" className="hover:text-primary transition-colors cursor-pointer">
-                    Alquiler de espacios
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/configurar" className="hover:text-primary transition-colors cursor-pointer">
-                    DJ y música
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/configurar" className="hover:text-primary transition-colors cursor-pointer">
-                    Cotillón y decoración
+                  <Link href="/politica-de-privacidad" className="hover:text-primary transition-colors cursor-pointer">
+                    Política de Privacidad
                   </Link>
                 </li>
               </ul>
