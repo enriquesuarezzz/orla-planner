@@ -25,7 +25,7 @@ export default function AvisoLegal() {
             </p>
             <ul className="space-y-2 text-muted-foreground">
               <li>
-                <strong className="text-foreground">Razón social / Nombre comercial:</strong> Infobermeja Producciones
+                <strong className="text-foreground">Razón social / Nombre comercial:</strong> Bermeja Producciones
               </li>
               <li>
                 <strong className="text-foreground">CIF:</strong> B75522110
@@ -64,7 +64,7 @@ export default function AvisoLegal() {
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4 text-foreground">Propiedad intelectual e industrial</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Los contenidos de esta web (textos, imágenes, logotipos, etc.) son propiedad de Infobermeja Producciones o
+              Los contenidos de esta web (textos, imágenes, logotipos, etc.) son propiedad de Bermeja Producciones o
               de sus legítimos titulares, quedando prohibida su reproducción, distribución o modificación sin
               autorización expresa.
             </p>
