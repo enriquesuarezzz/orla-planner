@@ -105,7 +105,7 @@ export async function sendOrlaRequest(data: OrlaRequestData) {
     `
 
     await resend.emails.send({
-      from: 'noreply@orlaslanzarote.es',
+      from: 'notificaciones@orlaslanzarote.es',
       to: "infobermejaproducciones@gmail.com",
       subject: `Nueva Solicitud de Orla - ${data.nombre} ${data.apellido} (${data.nombreCentro})`,
       html: emailHtml,

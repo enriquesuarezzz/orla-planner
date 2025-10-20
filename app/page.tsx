@@ -11,7 +11,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-24">
             <div className="flex items-center">
               <Image
-                src="/sombrero.png"
+                src="/gorro.png"
                 alt="Orlas Lanzarote Logo"
                 width={60}
                 height={60}

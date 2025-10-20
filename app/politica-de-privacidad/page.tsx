@@ -26,7 +26,7 @@ export default function PoliticaPrivacidad() {
             <h2 className="text-2xl font-semibold mb-4">Responsable del tratamiento</h2>
             <div className="space-y-2 text-muted-foreground">
               <p>
-                <strong className="text-foreground">Titular:</strong> Infobermeja Producciones
+                <strong className="text-foreground">Titular:</strong> Bermeja Producciones
               </p>
               <p>
                 <strong className="text-foreground">CIF:</strong> B75522110
@@ -91,7 +91,7 @@ export default function PoliticaPrivacidad() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">Medidas de seguridad</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Infobermeja Producciones ha adoptado las medidas técnicas y organizativas necesarias para garantizar la
+              Bermeja Producciones ha adoptado las medidas técnicas y organizativas necesarias para garantizar la
               seguridad y confidencialidad de los datos personales tratados.
             </p>
           </section>
