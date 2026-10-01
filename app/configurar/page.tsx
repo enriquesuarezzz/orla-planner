@@ -80,11 +80,6 @@ export default function ConfigurarPage() {
       errors.push("Debes indicar el número de invitados")
     }
 
-    if (formData.fecha && Number.parseInt(formData.numeroPersonas) < minimumGuests) {
-      errors.push(
-        `Para ${isExclusiveDate ? "viernes y sábados" : "este día"} el mínimo es de ${minimumGuests} personas${isExclusiveDate ? " por la exclusividad de la sala" : ""}.`,
-      )
-    }
 
     if (formData.tipoLugar === "eclipse" && Number.parseInt(formData.numeroPersonas) > 500) {
       errors.push(
