@@ -155,7 +155,7 @@ export default function HomePage() {
               <h4 className="font-medium mb-6 text-white text-sm tracking-wider uppercase">Contacto</h4>
               <ul className="space-y-3 text-stone-400 text-sm">
                 <li className="hover:text-primary transition-colors">
-                  <a href="mailto:INFOBERMEJAPRODUCCIONES@GMAIL.COM">INFOBERMEJAPRODUCCIONES@GMAIL.COM</a>
+                  <a href="https://bermejaproducciones.es" target="_blank" rel="noreferrer">bermejaproducciones.es</a>
                 </li>
                 <li>Calle Bebederos, Nº22 Arrieta</li>
                 <li>35542 Haría - Las Palmas</li>
