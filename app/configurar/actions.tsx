@@ -3,6 +3,7 @@
 import { Resend } from "resend"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
+
 interface OrlaRequestData {
   // Form data
   tipoLugar: string
@@ -31,7 +32,7 @@ export async function sendOrlaRequest(data: OrlaRequestData) {
     const tipoLugarText =
       data.tipoLugar === "pequeño" ? "Sala Pequeña (hasta 120 personas)" : "Sala Grande (+250 personas)"
     const cursoText = data.curso === "4eso" ? "4º de ESO" : data.curso === "2bach" ? "2º de Bachillerato" : "Otros"
-    const djText = data.dj === "profesional" ? "DJ Profesional" : "Música Propia"
+    const djText = data.dj === "propio" ? "DJ propio (contratación y gastos a cargo de la propia orla)" : "DJ Javi Fajardo (incluido)"
 
     const emailHtml = `
       <!DOCTYPE html>
@@ -84,7 +85,7 @@ export async function sendOrlaRequest(data: OrlaRequestData) {
               <div class="section-title">🍽️ Servicios Solicitados</div>
               <div class="field"><span class="label">Catering:</span> <span class="value">${data.catering}</span></div>
               <div class="field"><span class="label">Música:</span> <span class="value">${djText}</span></div>
-              <div class="field"><span class="label">Cotillón:</span> <span class="value">${data.cotillon ? "Sí" : "No"}</span></div>
+              <div class="field"><span class="label">Cotillón de graduación:</span> <span class="value">Incluido en todas las tarifas</span></div>
               ${data.barraLibre ? '<div class="field"><span class="label">Barra libre de alcohol:</span> <span class="value">Sí</span></div>' : ""}
             </div>
 
@@ -104,8 +105,8 @@ export async function sendOrlaRequest(data: OrlaRequestData) {
     `
 
     await resend.emails.send({
-      from: 'notificaciones@orlaslanzarote.es',
-      to: "infobermejaproducciones@gmail.com",
+      from: "Instituto Orlas <onboarding@resend.dev>",
+      to: "enriquesuarezmartin@gmail.com",
       subject: `Nueva Solicitud de Orla - ${data.nombre} ${data.apellido} (${data.nombreCentro})`,
       html: emailHtml,
     })

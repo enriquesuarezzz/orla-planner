@@ -11,7 +11,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-24">
             <div className="flex items-center">
               <Image
-                src="/gorro.png"
+                src="/sombrero.png"
                 alt="Orlas Lanzarote Logo"
                 width={60}
                 height={60}
@@ -95,7 +95,7 @@ export default function HomePage() {
                 <Music className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-lg font-medium mb-4 text-stone-900 tracking-wide">DJ Profesional</h3>
-              <p className="text-stone-600 leading-relaxed text-sm">Música perfecta o trae tu propia playlist</p>
+              <p className="text-stone-600 leading-relaxed text-sm">DJ Javi Fajardo incluido</p>
             </div>
 
             <div className="group text-center p-10 bg-stone-50 hover:bg-white border border-stone-200 hover:border-primary/30 transition-all duration-500 hover:shadow-xl">

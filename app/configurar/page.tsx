@@ -1,17 +1,17 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { ArrowLeft, MapPin, Users, Sparkles, Calendar, GraduationCap, Utensils, Wine, Music } from "lucide-react"
+import { ArrowLeft, MapPin, Users, Sparkles, Calendar, GraduationCap, Utensils, Music } from "lucide-react"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { sendOrlaRequest } from "./actions"
@@ -32,19 +32,36 @@ export default function ConfigurarPage() {
   })
 
   const [formData, setFormData] = useState({
-    tipoLugar: "",
+    tipoLugar: "eclipse",
     numeroPersonas: "",
     curso: "",
     cotillon: false,
-    dj: "",
+    dj: "profesional",
     catering: "",
     barraLibre: false,
     fecha: "",
-    hora: "",
+    hora: "23:00",
     comentarios: "",
   })
 
   const today = new Date().toISOString().split("T")[0]
+  const selectedDate = formData.fecha ? new Date(`${formData.fecha}T12:00:00`) : null
+  const isExclusiveDate = selectedDate ? [5, 6].includes(selectedDate.getDay()) : false
+  const minimumGuests = isExclusiveDate ? 300 : 150
+  const requiresExclusiveRate = Boolean(
+    formData.fecha &&
+      formData.numeroPersonas !== "" &&
+      Number.parseInt(formData.numeroPersonas) < minimumGuests,
+  )
+
+  useEffect(() => {
+    if (requiresExclusiveRate && formData.catering !== "120-euros-exclusividad") {
+      setFormData((current) => ({ ...current, catering: "120-euros-exclusividad" }))
+    }
+    if (!requiresExclusiveRate && formData.catering === "120-euros-exclusividad") {
+      setFormData((current) => ({ ...current, catering: "60-euros" }))
+    }
+  }, [requiresExclusiveRate, formData.catering])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -63,9 +80,15 @@ export default function ConfigurarPage() {
       errors.push("Debes indicar el número de invitados")
     }
 
-    if (formData.tipoLugar === "pequeño" && Number.parseInt(formData.numeroPersonas) > 120) {
+    if (formData.fecha && Number.parseInt(formData.numeroPersonas) < minimumGuests) {
       errors.push(
-        "La Sala Pequeña tiene capacidad máxima de 120 personas. Por favor, selecciona la Sala Grande o reduce el número de invitados.",
+        `Para ${isExclusiveDate ? "viernes y sábados" : "este día"} el mínimo es de ${minimumGuests} personas${isExclusiveDate ? " por la exclusividad de la sala" : ""}.`,
+      )
+    }
+
+    if (formData.tipoLugar === "eclipse" && Number.parseInt(formData.numeroPersonas) > 500) {
+      errors.push(
+        "El aforo máximo de Eclipse es de 500 personas.",
       )
     }
 
@@ -184,15 +207,15 @@ export default function ConfigurarPage() {
 
         // Reset forms
         setFormData({
-          tipoLugar: "",
+          tipoLugar: "eclipse",
           numeroPersonas: "",
           curso: "",
           cotillon: false,
-          dj: "",
+          dj: "profesional",
           catering: "",
           barraLibre: false,
           fecha: "",
-          hora: "",
+          hora: "23:00",
           comentarios: "",
         })
         setUserData({
@@ -246,7 +269,10 @@ export default function ConfigurarPage() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col space-y-6 sm:space-y-8 [&>div:nth-child(1)]:order-1 [&>div:nth-child(2)]:order-4 [&>div:nth-child(3)]:order-3 [&>div:nth-child(4)]:order-2 [&>div:nth-child(5)]:order-5 [&>div:nth-child(6)]:order-6 [&>div:nth-child(7)]:order-7 [&>div:nth-child(8)]:order-8"
+        >
           <Card className="border-stone-200 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white">
             <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6 pt-4 sm:pt-6">
               <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl font-medium text-stone-900">
@@ -311,69 +337,23 @@ export default function ConfigurarPage() {
                 Tipo de Lugar
               </CardTitle>
               <CardDescription className="text-sm sm:text-base text-stone-600 leading-relaxed">
-                Selecciona el tamaño del espacio según el número de invitados
+                La celebración tendrá lugar en Eclipse
               </CardDescription>
             </CardHeader>
             <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-              <RadioGroup
-                value={formData.tipoLugar}
-                onValueChange={(value) => setFormData({ ...formData, tipoLugar: value })}
-                className="space-y-3"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group space-y-3 sm:space-y-0">
-                  <div className="flex items-start space-x-3 sm:space-x-4 flex-1">
-                    <div className="flex items-center space-x-2 pt-1">
-                      <RadioGroupItem value="pequeño" id="pequeño" />
-                    </div>
-                    <div className="flex-1">
-                      <Label htmlFor="pequeño" className="cursor-pointer">
-                        <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
-                          Sala Pequeña
-                        </div>
-                        <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                          Hasta 120 personas
-                        </div>
-                      </Label>
-                    </div>
-                  </div>
-                  <div className="sm:ml-6 self-center">
-                    <Image
-                      src="/sala-pequena.jpeg"
-                      alt="Sala pequeña con iluminación azul"
-                      width={120}
-                      height={80}
-                      className="object-cover shadow-sm group-hover:shadow-md transition-shadow duration-300 rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group space-y-3 sm:space-y-0">
-                  <div className="flex items-start space-x-3 sm:space-x-4 flex-1">
-                    <div className="flex items-center space-x-2 pt-1">
-                      <RadioGroupItem value="grande" id="grande" />
-                    </div>
-                    <div className="flex-1">
-                      <Label htmlFor="grande" className="cursor-pointer">
-                        <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
-                          Sala Grande
-                        </div>
-                        <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                          + de 250 personas
-                        </div>
-                      </Label>
-                    </div>
-                  </div>
-                  <div className="sm:ml-6 self-center">
-                    <Image
-                      src="/sala-grande.jpeg"
-                      alt="Sala grande con iluminación morada"
-                      width={120}
-                      height={80}
-                      className="object-cover shadow-sm group-hover:shadow-md transition-shadow duration-300 rounded"
-                    />
-                  </div>
-                </div>
-              </RadioGroup>
+              <div className="flex items-center gap-4 p-4 sm:p-6 border-2 border-primary bg-primary/5">
+                <RadioGroup
+                  value="eclipse"
+                  onValueChange={() => setFormData({ ...formData, tipoLugar: "eclipse" })}
+                >
+                  <RadioGroupItem value="eclipse" id="eclipse" checked aria-label="Eclipse" />
+                </RadioGroup>
+                <Label htmlFor="eclipse" className="flex-1 cursor-default">
+                  <div className="font-medium text-sm sm:text-base text-stone-900">Eclipse</div>
+                  <div className="text-xs sm:text-sm text-stone-600 mt-1">Espacio reservado para vuestra celebración.</div>
+                </Label>
+                <div className="h-20 w-28 rounded border border-dashed border-stone-300 bg-white/60 flex items-center justify-center text-xs text-stone-400">Foto próximamente</div>
+              </div>
             </CardContent>
           </Card>
 
@@ -386,7 +366,7 @@ export default function ConfigurarPage() {
                 Número de Invitados
               </CardTitle>
               <CardDescription className="text-sm sm:text-base text-stone-600 leading-relaxed">
-                ¿Cuántas personas asistirán aproximadamente?
+                Indica el número aproximado de asistentes. El aforo mínimo depende del día que elijas.
               </CardDescription>
             </CardHeader>
             <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
@@ -399,10 +379,22 @@ export default function ConfigurarPage() {
                 min="1"
                 max="500"
               />
+  {formData.fecha && formData.numeroPersonas && Number.parseInt(formData.numeroPersonas) < minimumGuests && (
+  <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3">
+  <p className="text-sm text-amber-800">
+  El mínimo para esta fecha es de {minimumGuests} personas{isExclusiveDate ? " (exclusividad de sala)" : ""}.
+  </p>
+  {Number.parseInt(formData.numeroPersonas) < 150 && (
+  <p className="mt-2 text-sm font-semibold text-red-700">
+  Aforo demasiado bajo, posibles cambios en el precio/reserva. Administración se pondrá en contacto con usted.
+  </p>
+  )}
+  </div>
+  )}
               {formData.tipoLugar === "pequeño" && Number.parseInt(formData.numeroPersonas) > 120 && (
                 <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md">
                   <p className="text-sm text-amber-800">
-                    ⚠️ La Sala Pequeña tiene capacidad máxima de 120 personas. Por favor, selecciona la Sala Grande.
+                    El aforo máximo de Eclipse es de 500 personas.
                   </p>
                 </div>
               )}
@@ -420,6 +412,12 @@ export default function ConfigurarPage() {
               <CardDescription className="text-sm sm:text-base text-stone-600 leading-relaxed">
                 ¿Cuándo quieres celebrar tu orla?
               </CardDescription>
+              <div className="mt-4 rounded-md border border-primary/20 bg-primary/5 p-4 text-sm text-stone-700">
+                <p className="font-medium text-stone-900">Cómo funciona el aforo mínimo y el precio</p>
+                <p className="mt-1">Domingo a jueves: mínimo 150 personas.</p>
+                <p>Viernes y sábado: mínimo 300 personas (exclusividad de la sala).</p>
+                <p className="mt-2 font-medium text-red-600">Viernes y sábado menos de 300 personas (Se aplica la TARIFA EXCLUSIVIDAD)</p>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4 px-4 sm:px-6 pb-4 sm:pb-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -440,13 +438,17 @@ export default function ConfigurarPage() {
                   <Label htmlFor="hora" className="text-sm sm:text-base text-stone-700 mb-2 block">
                     Hora de inicio
                   </Label>
-                  <Input
-                    id="hora"
-                    type="time"
-                    value={formData.hora}
-                    onChange={(e) => setFormData({ ...formData, hora: e.target.value })}
-                    className="border-stone-300 focus:border-primary text-sm sm:text-base"
-                  />
+              <Input
+                id="hora"
+                type="text"
+                value="23:00 - 04:00"
+                readOnly
+                aria-describedby="hora-ayuda"
+                className="border-stone-300 bg-stone-100 text-sm sm:text-base"
+              />
+              <p id="hora-ayuda" className="mt-1 text-xs text-stone-500">
+                Horario fijo: de 23:00 a 04:00.
+              </p>
                 </div>
               </div>
             </CardContent>
@@ -458,117 +460,47 @@ export default function ConfigurarPage() {
                 <div className="p-1.5 sm:p-2 bg-primary/10">
                   <Utensils className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 </div>
-                Servicios de Catering
+                Servicios
               </CardTitle>
               <CardDescription className="text-sm sm:text-base text-stone-600 leading-relaxed">
-                Selecciona el servicio de comida y bebida que deseas
+                Elige la tarifa que mejor se adapta a vuestra celebración. El cotillón de graduación está incluido siempre.
               </CardDescription>
             </CardHeader>
             <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
               <RadioGroup
                 value={formData.catering}
-                onValueChange={(value) => setFormData({ ...formData, catering: value })}
+                onValueChange={(value) => {
+                  if (!requiresExclusiveRate) setFormData({ ...formData, catering: value })
+                }}
                 className="space-y-3"
               >
                 <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
-                  <RadioGroupItem value="coctel-bienvenida" id="coctel-bienvenida" />
-                  <Label htmlFor="coctel-bienvenida" className="flex-1 cursor-pointer">
-                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
-                      Cóctel de Bienvenida
-                    </div>
-                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                      Bebidas y aperitivos al inicio del evento
-                    </div>
+                  <RadioGroupItem value="60-euros" id="tarifa-60" />
+                  <Label htmlFor="tarifa-60" className="flex-1 cursor-pointer">
+                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">60 € por persona</div>
+                    <div className="text-xs sm:text-sm text-stone-600 mt-1 leading-relaxed">Barra libre y cotillón de graduación</div>
                   </Label>
                 </div>
-
                 <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
-                  <RadioGroupItem value="coctel-bienvenida-picoteo-gala" id="coctel-bienvenida-picoteo-gala" />
-                  <Label htmlFor="coctel-bienvenida-picoteo-gala" className="flex-1 cursor-pointer">
-                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
-                      Cóctel de Bienvenida + Picoteo de Gala
-                    </div>
-                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                      Bebidas de bienvenida y canapés premium durante el evento
-                    </div>
+                  <RadioGroupItem value="70-euros" id="tarifa-70" />
+                  <Label htmlFor="tarifa-70" className="flex-1 cursor-pointer">
+                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">80 € por persona</div>
+                    <div className="text-xs sm:text-sm text-stone-600 mt-1 leading-relaxed">Barra libre, cotillón de graduación, photocall, fotógrafo y burger por persona</div>
+                    <div className="text-xs sm:text-sm text-primary mt-1 font-medium">Servicio de burger: 21:00 a 00:00</div>
                   </Label>
                 </div>
-
-                <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
-                  <RadioGroupItem value="picoteo-gala" id="picoteo-gala" />
-                  <Label htmlFor="picoteo-gala" className="flex-1 cursor-pointer">
-                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
-                      Picoteo de Gala
-                    </div>
-                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                      Canapés y aperitivos premium durante el evento
-                    </div>
-                  </Label>
-                </div>
-
-                <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
-                  <RadioGroupItem value="picoteo-final" id="picoteo-final" />
-                  <Label htmlFor="picoteo-final" className="flex-1 cursor-pointer">
-                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
-                      Picoteo al Finalizar
-                    </div>
-                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                      Snacks y bebidas para el cierre del evento
-                    </div>
-                  </Label>
-                </div>
-
-                <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
-                  <RadioGroupItem
-                    value="coctel-bienvenida-picoteo-gala-final"
-                    id="coctel-bienvenida-picoteo-gala-final"
-                  />
-                  <Label htmlFor="coctel-bienvenida-picoteo-gala-final" className="flex-1 cursor-pointer">
-                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
-                      Cóctel de Bienvenida + Picoteo de Gala + Picoteo Final
-                    </div>
-                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                      Servicio completo de catering durante todo el evento
-                    </div>
-                  </Label>
-                </div>
+                {requiresExclusiveRate && (
+                  <div className="flex items-center space-x-3 p-4 sm:p-6 border-2 border-primary bg-primary/5 transition-all duration-300 group">
+                    <RadioGroupItem value="120-euros-exclusividad" id="tarifa-120" disabled />
+                    <Label htmlFor="tarifa-120" className="flex-1 cursor-not-allowed">
+                      <div className="font-medium text-sm sm:text-base text-stone-900">120 € por persona · Exclusividad de sala</div>
+                      <div className="text-xs sm:text-sm text-stone-600 mt-1 leading-relaxed">Tarifa obligatoria cuando no se alcanza el mínimo de personas. Incluye todo lo de la tarifa de 80 € y no se puede cambiar.</div>
+                    </Label>
+                  </div>
+                )}
               </RadioGroup>
             </CardContent>
           </Card>
-
-          {(formData.curso === "2bach" || formData.curso === "otros") && (
-            <Card className="border-stone-200 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white">
-              <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6 pt-4 sm:pt-6">
-                <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl font-medium text-stone-900">
-                  <div className="p-1.5 sm:p-2 bg-primary/10">
-                    <Wine className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                  </div>
-                  Barra Libre de Alcohol
-                </CardTitle>
-                <CardDescription className="text-sm sm:text-base text-stone-600 leading-relaxed">
-                  Bebidas alcohólicas disponibles durante el evento
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-                <div className="flex items-start space-x-3 p-3 sm:p-4 border border-stone-200 hover:bg-stone-50 transition-colors">
-                  <Checkbox
-                    id="barraLibre"
-                    checked={formData.barraLibre}
-                    onCheckedChange={(checked) => setFormData({ ...formData, barraLibre: checked as boolean })}
-                    className="mt-1"
-                  />
-                  <Label htmlFor="barraLibre" className="cursor-pointer flex-1">
-                    <div className="font-medium text-sm sm:text-base text-stone-900">
-                      Sí, quiero barra libre de alcohol
-                    </div>
-                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                      Incluye bebidas alcohólicas variadas durante el evento
-                    </div>
-                  </Label>
-                </div>
-              </CardContent>
-            </Card>
-          )}
 
           <Card className="border-stone-200 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white">
             <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6 pt-4 sm:pt-6">
@@ -579,7 +511,7 @@ export default function ConfigurarPage() {
                 Música y DJ
               </CardTitle>
               <CardDescription className="text-sm sm:text-base text-stone-600 leading-relaxed">
-                ¿Necesitas DJ profesional o prefieres poner tu propia música?
+                DJ Javi Fajardo incluido. Si queréis otro DJ, el coste corre a cargo de la propia orla.
               </CardDescription>
             </CardHeader>
             <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
@@ -592,56 +524,21 @@ export default function ConfigurarPage() {
                   <RadioGroupItem value="profesional" id="dj-profesional" />
                   <Label htmlFor="dj-profesional" className="flex-1 cursor-pointer">
                     <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
-                      DJ Profesional
+                      DJ Javi Fajardo
                     </div>
                     <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                      Incluye equipo de sonido y música variada
+                      DJ incluido en la celebración
                     </div>
                   </Label>
                 </div>
-
                 <div className="flex items-center space-x-3 p-4 sm:p-6 border border-stone-200 hover:border-primary/30 hover:bg-stone-50 transition-all duration-300 group">
-                  <RadioGroupItem value="propia" id="musica-propia" />
-                  <Label htmlFor="musica-propia" className="flex-1 cursor-pointer">
-                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">
-                      Música Propia
-                    </div>
-                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                      Traemos nuestro equipo de sonido, tú pones la música
-                    </div>
+                  <RadioGroupItem value="propio" id="dj-propio" />
+                  <Label htmlFor="dj-propio" className="flex-1 cursor-pointer">
+                    <div className="font-medium text-sm sm:text-base text-stone-900 group-hover:text-primary transition-colors">DJ propio</div>
+                    <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">La contratación y todos los gastos corren a cargo de la propia orla.</div>
                   </Label>
                 </div>
               </RadioGroup>
-            </CardContent>
-          </Card>
-
-          <Card className="border-stone-200 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white">
-            <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6 pt-4 sm:pt-6">
-              <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl font-medium text-stone-900">
-                <div className="p-1.5 sm:p-2 bg-primary/10">
-                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                </div>
-                Cotillón
-              </CardTitle>
-              <CardDescription className="text-sm sm:text-base text-stone-600 leading-relaxed">
-                Accesorios divertidos para hacer tu orla más especial
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-              <div className="flex items-start space-x-3 p-3 sm:p-4 border border-stone-200 hover:bg-stone-50 transition-colors">
-                <Checkbox
-                  id="cotillon"
-                  checked={formData.cotillon}
-                  onCheckedChange={(checked) => setFormData({ ...formData, cotillon: checked as boolean })}
-                  className="mt-1"
-                />
-                <Label htmlFor="cotillon" className="cursor-pointer flex-1">
-                  <div className="font-medium text-sm sm:text-base text-stone-900">Sí, quiero cotillón incluido</div>
-                  <div className="text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1 leading-relaxed">
-                    Sombreros, serpentinas, globos, etc.
-                  </div>
-                </Label>
-              </div>
             </CardContent>
           </Card>
 

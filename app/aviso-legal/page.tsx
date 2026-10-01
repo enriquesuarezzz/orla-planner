@@ -14,7 +14,7 @@ export default function AvisoLegal() {
         </Link>
 
         <div className="prose prose-neutral dark:prose-invert max-w-none">
-          <h1 className="text-4xl font-bold mb-8 text-foreground">Aviso Legal</h1>
+          <h1 className="text-4xl font-bold mb-8 text-foreground">📄 Aviso Legal</h1>
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4 text-foreground">Titular de la web</h2>
@@ -25,7 +25,7 @@ export default function AvisoLegal() {
             </p>
             <ul className="space-y-2 text-muted-foreground">
               <li>
-                <strong className="text-foreground">Razón social / Nombre comercial:</strong> Bermeja Producciones
+                <strong className="text-foreground">Razón social / Nombre comercial:</strong> Infobermeja Producciones
               </li>
               <li>
                 <strong className="text-foreground">CIF:</strong> B75522110
@@ -64,7 +64,7 @@ export default function AvisoLegal() {
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4 text-foreground">Propiedad intelectual e industrial</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Los contenidos de esta web (textos, imágenes, logotipos, etc.) son propiedad de Bermeja Producciones o
+              Los contenidos de esta web (textos, imágenes, logotipos, etc.) son propiedad de Infobermeja Producciones o
               de sus legítimos titulares, quedando prohibida su reproducción, distribución o modificación sin
               autorización expresa.
             </p>
