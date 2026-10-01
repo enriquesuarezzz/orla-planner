@@ -1,38 +1,48 @@
-"use server"
+"use server";
 
-import { Resend } from "resend"
+import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface OrlaRequestData {
   // Form data
-  tipoLugar: string
-  numeroPersonas: string
-  curso: string
-  cotillon: boolean
-  dj: string
-  catering: string
-  barraLibre: boolean
-  fecha: string
-  hora: string
-  comentarios: string
+  tipoLugar: string;
+  numeroPersonas: string;
+  curso: string;
+  cotillon: boolean;
+  dj: string;
+  catering: string;
+  barraLibre: boolean;
+  fecha: string;
+  hora: string;
+  comentarios: string;
   // User data
-  nombre: string
-  apellido: string
-  dni: string
-  calle: string
-  codigoPostal: string
-  nombreCentro: string
-  email: string
-  telefono: string
+  nombre: string;
+  apellido: string;
+  dni: string;
+  calle: string;
+  codigoPostal: string;
+  nombreCentro: string;
+  email: string;
+  telefono: string;
 }
 
 export async function sendOrlaRequest(data: OrlaRequestData) {
   try {
     const tipoLugarText =
-      data.tipoLugar === "pequeño" ? "Sala Pequeña (hasta 120 personas)" : "Sala Grande (+250 personas)"
-    const cursoText = data.curso === "4eso" ? "4º de ESO" : data.curso === "2bach" ? "2º de Bachillerato" : "Otros"
-    const djText = data.dj === "propio" ? "DJ propio (contratación y gastos a cargo de la propia orla)" : "DJ Javi Fajardo (incluido)"
+      data.tipoLugar === "pequeño"
+        ? "Sala Pequeña (hasta 120 personas)"
+        : "Sala Grande (+250 personas)";
+    const cursoText =
+      data.curso === "4eso"
+        ? "4º de ESO"
+        : data.curso === "2bach"
+          ? "2º de Bachillerato"
+          : "Otros";
+    const djText =
+      data.dj === "propio"
+        ? "DJ propio (contratación y gastos a cargo de la propia orla)"
+        : "DJ Javi Fajardo (incluido)";
 
     const emailHtml = `
       <!DOCTYPE html>
@@ -53,13 +63,16 @@ export async function sendOrlaRequest(data: OrlaRequestData) {
           <div class="container">
             <div class="header">
               <h1 style="margin: 0; color: #333;">Nueva Solicitud de Orla</h1>
-              <p style="margin: 10px 0 0 0; color: #666;">Recibida el ${new Date().toLocaleDateString("es-ES", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}</p>
+              <p style="margin: 10px 0 0 0; color: #666;">Recibida el ${new Date().toLocaleDateString(
+                "es-ES",
+                {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                },
+              )}</p>
             </div>
 
             <div class="section">
@@ -102,18 +115,18 @@ export async function sendOrlaRequest(data: OrlaRequestData) {
           </div>
         </body>
       </html>
-    `
+    `;
 
     await resend.emails.send({
       from: "Instituto Orlas <onboarding@resend.dev>",
-      to: "enriquesuarezmartin@gmail.com",
+      to: "infobermejaproducciones@gmail.com",
       subject: `Nueva Solicitud de Orla - ${data.nombre} ${data.apellido} (${data.nombreCentro})`,
       html: emailHtml,
-    })
+    });
 
-    return { success: true }
+    return { success: true };
   } catch (error) {
-    console.error("Error sending email:", error)
-    return { success: false, error: "Error al enviar el email" }
+    console.error("Error sending email:", error);
+    return { success: false, error: "Error al enviar el email" };
   }
 }
